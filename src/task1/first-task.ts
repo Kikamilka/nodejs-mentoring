@@ -12,6 +12,7 @@ export function firstTaskStarter () {
     rl.on('line', function(line: string){
         const reverseLine = reversedString(line);
         console.log(reverseLine);
+        console.log('\n');
     });
 }
 
