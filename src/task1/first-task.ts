@@ -1,5 +1,5 @@
 import readline from 'readline';
-import { reversedString } from "./string-reverser";
+import { reversedString } from "./utils/string-reverser";
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -14,3 +14,5 @@ export function firstTaskStarter () {
         console.log(reverseLine);
     });
 }
+
+firstTaskStarter();

@@ -1,1 +1,1 @@
-console.log('Hello');
+console.log(`Hello! It's main js file`);
