@@ -1,29 +1,5 @@
 import {User} from "../models/user.model";
 
-export const collectionUsers: User[] = [
-    {
-        id: '1',
-        login: 'user 1',
-        password: 'user1-password',
-        age: 25,
-        isDeleted: false,
-    },
-    {
-        id: '2',
-        login: 'Katya',
-        password: 'user2-password',
-        age: 40,
-        isDeleted: false,
-    },
-    {
-        id: '3',
-        login: 'Petya_Pupkin',
-        password: 'user3-password',
-        age: 8,
-        isDeleted: false,
-    }
-];
-
 export const mapUsers: Map<string, User> = new Map([
     ['1', {
         id: '1',
