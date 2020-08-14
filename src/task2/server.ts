@@ -1,8 +1,9 @@
-import express, {NextFunction, Request, Response} from 'express';
+import express, {NextFunction, Response} from 'express';
 
 import {User} from "./models/user.model";
 import {mapUsers} from "./data/users.mock";
 import {userSchema, validateSchema} from "./validation";
+import {CustomRequest} from "../../custom";
 
 const app = express();
 const port = 3000;
@@ -10,7 +11,13 @@ const port = 3000;
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send('node-api works!')
+    res.json({
+        '1': 'Get user: /user/:id',
+        '2': 'Get list all users: /users',
+        '3': 'Delete user: /delete/:id',
+        '4': 'Get limited filtered users: /limitUsers&limit=*&loginSubstring=*',
+        '5': 'Create or update user - POST: /users with User in body'
+    });
 });
 
 app.get('/user/:id', (req, res) => {
@@ -24,28 +31,6 @@ app.get('/user/:id', (req, res) => {
 
 app.get('/users', (req, res) => {
     res.json([...mapUsers.values()]);
-});
-
-function getAutoSuggestUsers({query: {limit = 1, loginSub = ''}}): Map<string, User> {
-    let userValuesAsArray = [...mapUsers.values()];
-    userValuesAsArray.sort((user1, user2) => user1.login.toLowerCase() > user2.login.toLowerCase() ? -1 : 1 );
-    userValuesAsArray = userValuesAsArray.filter((user) => user.login.includes(loginSub));
-    userValuesAsArray = userValuesAsArray.slice(0, limit);
-
-    return new Map(userValuesAsArray.map(user => [user.id, user]));
-}
-
-function limitUsers (req: any, res: express.Response, next: express.NextFunction) {
-    req.limitUsers = getAutoSuggestUsers(req.query);
-    next();
-}
-
-// это нужно только для /limitUsers
-// app.use(limitUsers);
-
-app.get('/limitUsers', (req: any, res) => {
-    let responseUsers = req.limitUsers;
-    res.json([...responseUsers.values()]);
 });
 
 app.get('/delete/:id', (req, res) => {
@@ -66,6 +51,29 @@ app.post('/users', validateSchema(userSchema), (req, res) => {
     mapUsers.set(req.params.id, user);
 
     res.json([...mapUsers.values()]);
+});
+
+function getAutoSuggestUsers(limit: number, loginSubstring: string): Map<string, User> {
+    let userValuesAsArray = [...mapUsers.values()];
+    userValuesAsArray.sort((user1, user2) => user1.login.toLowerCase() > user2.login.toLowerCase() ? -1 : 1 );
+    userValuesAsArray = userValuesAsArray.filter((user) => user.login.includes(loginSubstring));
+    userValuesAsArray = userValuesAsArray.slice(0, limit);
+
+    return new Map(userValuesAsArray.map(user => [user.id, user]));
+}
+
+function limitUsers (req: CustomRequest, res: Response, next: NextFunction) {
+    const loginSubstring = req.query.loginSubstring?.toString() || '';
+    const limit = req.query.limit ? +req.query.limit : 1;
+    req.limitUsers = getAutoSuggestUsers(limit, loginSubstring);
+    next();
+}
+
+app.get<any, CustomRequest, any, any>('/limitUsers', [limitUsers], (req: CustomRequest, res: Response, next: NextFunction) => {
+    next();
+}, (req: CustomRequest, res: Response) => {
+    const resMap = req.limitUsers ? [...req.limitUsers?.values()] : [];
+    res.json(resMap);
 });
 
 app.listen(port, () => {

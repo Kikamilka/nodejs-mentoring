@@ -1,4 +1,6 @@
 import * as Joi from "joi";
+import {AnySchema, ValidationErrorItem} from "joi";
+import {NextFunction, Request, Response} from "express";
 
 export const userSchema = Joi.object().keys({
     id: Joi.string().required(),
@@ -8,8 +10,8 @@ export const userSchema = Joi.object().keys({
     isDeleted: Joi.boolean().required(),
 });
 
-function errorResponse(schemaErrors: any) {
-    const errors = schemaErrors.map((error: any) => {
+function errorResponse(schemaErrors: ValidationErrorItem[]) {
+    const errors = schemaErrors.map((error: ValidationErrorItem) => {
         let {path, message} = error;
         return {path, message};
     });
@@ -19,8 +21,8 @@ function errorResponse(schemaErrors: any) {
     };
 }
 
-export function validateSchema(schema: any) {
-    return (req: any, res: any, next: any) => {
+export function validateSchema(schema: AnySchema) {
+    return (req: Request, res: Response, next: NextFunction) => {
         const {error} = schema.validate(req.body, {
             abortEarly: false,
             allowUnknown: false,
