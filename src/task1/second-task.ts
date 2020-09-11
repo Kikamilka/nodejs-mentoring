@@ -1,13 +1,17 @@
 import * as fs from 'fs';
 import csv from "csvtojson";
 import { pipeline } from 'stream';
+import path from 'path';
 
-const filePath = 'src/task1/csv/nodejs-hw1-ex1.csv';
-const outputFilePath = 'src/task1/csv/nodejs-hw1-ex2.txt';
+const filePath = path.resolve('src/task1/csv/nodejs-hw1-ex1.csv');
+const outputFilePath = path.resolve('src/task1/csv/nodejs-hw1-ex2.txt');
 
 pipeline(
     fs.createReadStream(filePath),
-    csv(),
+    csv().subscribe(csvLine => {
+        delete csvLine['Amount'];
+        Object.keys(csvLine).forEach(key => renameProperty(csvLine, key, key.toLowerCase()));
+    }),
     fs.createWriteStream(outputFilePath),
     (err) => {
         if (err) {
@@ -17,3 +21,8 @@ pipeline(
         }
     }
 );
+
+function renameProperty(csvLine: any, fromKey: string, toKey: string) {
+    csvLine[toKey] = csvLine[fromKey];
+    delete csvLine[fromKey];
+}
