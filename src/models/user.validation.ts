@@ -3,7 +3,7 @@ import {AnySchema, ValidationErrorItem} from "joi";
 import {NextFunction, Request, Response} from "express";
 
 export const userSchema = Joi.object().keys({
-    id: Joi.string().required(),
+    id: Joi.string(),
     login: Joi.string().required(),
     password: Joi.string().regex(/^[a-zA-Z0-9]*/),
     age: Joi.number().integer().min(4).max(130),
@@ -21,7 +21,7 @@ function errorResponse(schemaErrors: ValidationErrorItem[]) {
     };
 }
 
-export function validateSchema(schema: AnySchema) {
+export function userValidateSchema(schema: AnySchema) {
     return (req: Request, res: Response, next: NextFunction) => {
         const {error} = schema.validate(req.body, {
             abortEarly: false,

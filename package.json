@@ -15,7 +15,7 @@
     "lint-fix": "npm run lint -- --fix",
     "task1": "nodemon src/task1/first-task.ts",
     "task2": "nodemon src/task1/second-task.ts",
-    "module2": "nodemon src/task2/server.ts"
+    "module2": "nodemon src/api/user.api.ts"
   },
   "repository": {
     "type": "git",
