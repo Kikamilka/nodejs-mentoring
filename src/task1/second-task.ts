@@ -3,8 +3,8 @@ import csv from "csvtojson";
 import { pipeline } from 'stream';
 import path from 'path';
 
-const filePath = path.resolve('src/task1/csv/nodejs-hw1-ex1.csv');
-const outputFilePath = path.resolve('src/task1/csv/nodejs-hw1-ex2.txt');
+const filePath = path.resolve('src/csv/nodejs-hw1-ex1.csv');
+const outputFilePath = path.resolve('src/csv/nodejs-hw1-ex2.txt');
 
 pipeline(
     fs.createReadStream(filePath),

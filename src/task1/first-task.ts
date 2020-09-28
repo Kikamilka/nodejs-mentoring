@@ -1,5 +1,5 @@
 import readline from 'readline';
-import { reversedString } from "./utils/string-reverser";
+import { reversedString } from "../utils/string-reverser";
 
 const rl = readline.createInterface({
     input: process.stdin,
