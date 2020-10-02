@@ -1,14 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import {sequelize} from "../configs/sequelize.config";
-
-// вынести в types
-export interface UserAttributes {
-    id: string;
-    login: string;
-    password: string;
-    age: number;
-    isDeleted?: boolean;
-}
+import {UserAttributes} from "../types/user-attributes";
 
 export class User extends Model<UserAttributes> implements UserAttributes {
     public id!: string;

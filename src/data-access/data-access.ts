@@ -1,6 +1,8 @@
-import {User, UserAttributes} from "../models/user.model";
-import {generateId} from "../utils";
 import {Op} from "sequelize";
+
+import {User} from "../models/user.model";
+import {UserAttributes} from "../types/user-attributes";
+import {generateId} from "../utils";
 
 export class DataAccessLayer {
     public getUserById = (userId: string): Promise<User | null> => {

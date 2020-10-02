@@ -1,4 +1,4 @@
-import {UserAttributes} from "../models/user.model";
+import {UserAttributes} from "../types/user-attributes";
 import {DataAccessLayer} from "../data-access/data-access";
 
 const dataAccessLayer = new DataAccessLayer();
