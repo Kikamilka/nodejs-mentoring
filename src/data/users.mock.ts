@@ -1,6 +1,6 @@
-import {User} from "../models/user.model";
+import {UserAttributes} from "../models/user.model";
 
-export const mapUsers: Map<string, User> = new Map([
+export const mapUsers: Map<string, UserAttributes> = new Map([
     ['1', {
         id: '1',
         login: 'user 1',
