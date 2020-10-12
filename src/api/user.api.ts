@@ -23,8 +23,15 @@ router.get('/user/:id',
 );
 
 router.get('/', async (req, res) => {
-    const users = await userCtrl.getAllUsers();
-    res.json(users);
+    await userCtrl.getAllUsers().then(users => {
+        res.json(users);
+    }).catch(err => console.log(err));
+});
+
+router.get('/deletedUsers', async (req, res) => {
+    await userCtrl.getDeletedUsers().then(users => {
+        res.json(users);
+    }).catch(err => console.log(err));
 });
 
 router.post('/', userValidateSchema(userSchema), async (req, res) => {
@@ -33,12 +40,15 @@ router.post('/', userValidateSchema(userSchema), async (req, res) => {
         return null;
     }
 
-    const users = await userCtrl.createNewUser(req.body);
+    const user = await userCtrl.createNewUser(req.body);
 
-    if (!users) {
+    if (!user) {
         res.status(403).json({message: `User with same login is exist`});
     } else {
-        res.status(200).json([...users.values()]);
+        res.status(200).json({
+            message: `New user was added`,
+            user: user
+        });
     }
 });
 
@@ -48,12 +58,12 @@ router.put('/', userValidateSchema(userSchema), async (req, res) => {
         return null;
     }
 
-    const users = await userCtrl.updateUser(req.body);
+    const usersUpdateCount = await userCtrl.updateUser(req.body);
 
-    if (!users) {
+    if (!usersUpdateCount) {
         res.status(404).json({message: `User with id ${req.params.id} not found`});
     } else {
-        res.status(200).json([...users.values()]);
+        res.status(200).json({message: `User with id ${req.params.id} was updated`});
     }
 });
 
@@ -71,7 +81,14 @@ router.get('/limitUsers', async (req: CustomRequest, res: Response) => {
     const {loginSubstring, limit} = req.query;
     const limitUsersArray = userCtrl.getLimitUsers(limit ? +limit : 1, loginSubstring?.toString() || '');
 
-    res.json([...limitUsersArray.values()]);
+    limitUsersArray
+        .catch((err) => {
+            console.log(err);
+        }).then((users) => {
+            res.json(users);
+        }
+    )
+
 });
 
 app.use('/users', router);
