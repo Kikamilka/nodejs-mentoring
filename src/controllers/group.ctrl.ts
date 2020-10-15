@@ -1,17 +1,17 @@
-import {DataAccessLayer} from "../data-access/data-access";
+import {GroupDataAccessLayer} from "../data-access/group.dal";
 import {GroupAttributes} from "../types/group-attributes";
 
-const dataAccessLayer = new DataAccessLayer();
+const dataAccessLayer = new GroupDataAccessLayer();
 
-const getGroupById = (groupId: string) => {
+export const getGroupById = (groupId: string) => {
     return dataAccessLayer.getGroupById(groupId);
 };
 
-const getAllGroups = () => {
+export const getAllGroups = () => {
     return dataAccessLayer.getAllGroups();
 };
 
-const removeGroup = (groupId: string): Promise<boolean> => {
+export const removeGroup = (groupId: string): Promise<boolean> => {
     return dataAccessLayer.removeGroup(groupId)
         .catch(() => {
             return Promise.resolve(false);
@@ -21,18 +21,10 @@ const removeGroup = (groupId: string): Promise<boolean> => {
         })
 };
 
-const updateGroup = (newGroup: GroupAttributes) => {
+export const updateGroup = (newGroup: GroupAttributes) => {
     return dataAccessLayer.updateGroup(newGroup);
 };
 
-const createNewGroup = (group: GroupAttributes) => {
+export const createNewGroup = (group: GroupAttributes) => {
     return dataAccessLayer.createNewGroup(group);
-};
-
-export {
-    createNewGroup,
-    getAllGroups,
-    getGroupById,
-    removeGroup,
-    updateGroup
 };

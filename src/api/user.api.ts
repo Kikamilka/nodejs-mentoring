@@ -1,5 +1,5 @@
 import express, {Response} from 'express';
-import {userSchema, userValidateSchema} from "../models/user.validation";
+import {userSchema, commonValidateSchema} from "../models/user.validation";
 import {CustomRequest} from "../types/custom";
 import * as userCtrl from "../controllers/user.ctrl";
 
@@ -29,7 +29,7 @@ userRouter.get('/deletedUsers', async (req, res) => {
     }).catch(err => console.log(err));
 });
 
-userRouter.post('/', userValidateSchema(userSchema), async (req, res) => {
+userRouter.post('/', commonValidateSchema(userSchema), async (req, res) => {
     if (!req.body) {
         res.status(404).json({message: `User's data not found`});
         return null;
@@ -47,7 +47,7 @@ userRouter.post('/', userValidateSchema(userSchema), async (req, res) => {
     }
 });
 
-userRouter.put('/', userValidateSchema(userSchema), async (req, res) => {
+userRouter.put('/', commonValidateSchema(userSchema), async (req, res) => {
     if (!req.body) {
         res.status(404).json({message: `User's data not found`});
         return null;

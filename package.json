@@ -16,7 +16,7 @@
     "task1": "nodemon src/task1/first-task.ts",
     "task2": "nodemon src/task1/second-task.ts",
     "app_start": "nodemon src/app.ts",
-    "connect": "nodemon src/data-access/db-connect.ts"
+    "connect": "nodemon src/data-access/pg-db-connect.ts"
   },
   "repository": {
     "type": "git",

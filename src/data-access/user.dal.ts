@@ -3,10 +3,8 @@ import {Op} from "sequelize";
 import {User} from "../models/user.model";
 import {UserAttributes} from "../types/user-attributes";
 import {generateId} from "../utils";
-import {Group} from "../models/group.model";
-import {GroupAttributes} from "../types/group-attributes";
 
-export class DataAccessLayer {
+export class UserDataAccessLayer {
     public getUserById = (userId: string): Promise<User | null> => {
         return User.findOne({where: {id: userId}});
     };
@@ -70,38 +68,5 @@ export class DataAccessLayer {
             },
             limit: limit,
         });
-    };
-
-    public getGroupById = (groupId: string): Promise<Group | null> => {
-        return Group.findOne({where: {id: groupId}});
-    };
-
-    public getAllGroups = (): Promise<Group[]> => {
-        return Group.findAll();
-    };
-
-    public updateGroup = (newGroup: GroupAttributes) => {
-        return Group.update(newGroup, {
-            where: {
-                id: newGroup.id,
-            },
-        });
-    };
-
-    public createNewGroup = (group: GroupAttributes) => {
-        return Group.create(
-            {
-                ...group,
-                id: generateId().toString(),
-            }
-        );
-    };
-
-    public removeGroup = (groupId: string): Promise<number> => {
-        return Group.destroy({
-            where: {
-                id: groupId
-            }
-        })
     };
 }
