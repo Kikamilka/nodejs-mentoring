@@ -1,16 +1,18 @@
-import express, {Response} from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import {userSchema, commonValidateSchema} from "../models/user.validation";
 import {CustomRequest} from "../types/custom";
 import * as userCtrl from "../controllers/user.ctrl";
+import {error} from "winston";
 
 export const userRouter = express.Router();
 
 userRouter.get('/user/:id',
-    async (req, res) => {
+    async (req: Request, res: Response, next: NextFunction) => {
         const user = await userCtrl.getUserById(req.params.id);
 
         if (!user) {
-            res.status(404).json({message: `User with id ${req.params.id} not found`});
+            throw error(`User with id ${req.params.id} not found`);
+            // res.status(404).json({message: `User with id ${req.params.id} not found`});
         } else {
             res.status(200).json(user);
         }

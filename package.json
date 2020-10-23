@@ -34,7 +34,8 @@
     "express": "^4.17.1",
     "joi": "^17.2.0",
     "pg": "^8.3.3",
-    "sequelize": "^6.3.5"
+    "sequelize": "^6.3.5",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@types/express": "^4.17.7",
