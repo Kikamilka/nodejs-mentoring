@@ -1,30 +1,26 @@
-import {createLogger, format, transports} from "winston";
-const { combine, timestamp, prettyPrint } = format;
+import expressWinston from 'express-winston';
+import winston, {format} from "winston";
 
-export const winstonTransportOptions = {
-    file: {
-        level: 'error',
-        filename: `src/logs/app.log`,
-        handleExceptions: true,
-        json: true,
-        maxsize: 5242880, // 5MB
-        maxFiles: 5,
-        colorize: false,
-    },
-    console: {
-        level: 'info',
-        handleExceptions: true,
-        json: false,
-        colorize: true,
-    },
-};
+export const requestLogging = expressWinston.logger({
+    transports: [
+        new winston.transports.Console()
+    ],
+    format: format.combine(
+        format.timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss'
+        }),
+        winston.format.json(),
+    )
+})
 
-export const winstonLogger = createLogger({
-    format: combine(
-        format.splat(),
-        format.simple(),
-        timestamp(),
-        prettyPrint()
-    ),
-    transports: [new transports.Console(winstonTransportOptions.console)]
+export const errorLogging = expressWinston.errorLogger({
+    transports: [
+        new winston.transports.Console()
+    ],
+    format: format.combine(
+        format.timestamp({
+            format: 'YYYY-MM-DD HH:mm:ss'
+        }),
+        winston.format.json(),
+    )
 })
