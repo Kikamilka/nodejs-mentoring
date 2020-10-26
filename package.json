@@ -32,6 +32,7 @@
     "csvtojson": "^2.0.10",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-safe-async": "^3.0.0",
     "express-winston": "^4.0.5",
     "joi": "^17.2.0",
     "pg": "^8.3.3",
