@@ -1,6 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import {sequelize} from "../configs/sequelize.config";
-import {UserGroupAttributes} from "../types/user-group-attributes";
+import {UserGroupAttributes} from "../types/user-group-attributes.type";
 
 export class UserGroup extends Model<UserGroupAttributes> implements UserGroupAttributes {
     public user_id!: string;

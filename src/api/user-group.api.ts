@@ -1,10 +1,11 @@
 import express, {Request, Response} from 'express';
 import * as userGroupCtrl from "../controllers/user-group.ctrl";
 import {safe} from "express-safe-async";
+import {checkToken} from "../auth/auth";
 
 export const userGroupRouter = express.Router();
 
-userGroupRouter.get('/getUsersInGroup/:id',
+userGroupRouter.get('/getUsersInGroup/:id', checkToken,
     safe(async (req: Request, res: Response) => {
         const user = await userGroupCtrl.getUsersInGroupById(req.params.id);
 
@@ -16,13 +17,11 @@ userGroupRouter.get('/getUsersInGroup/:id',
     }
 ));
 
-userGroupRouter.get('/', safe(async (req: Request, res: Response) => {
-    await userGroupCtrl.getAllUserGroup().then(userGroups => {
-        res.json(userGroups);
-    });
+userGroupRouter.get('/', checkToken, safe(async (req: Request, res: Response) => {
+    res.json(await userGroupCtrl.getAllUserGroup());
 }));
 
-userGroupRouter.get('/removeByUser/:id', safe(async (req: Request, res: Response) => {
+userGroupRouter.get('/removeByUser/:id', checkToken, safe(async (req: Request, res: Response) => {
     const deletedRows = await userGroupCtrl.removeUser(req.params.id);
 
     if (!deletedRows) {
@@ -32,7 +31,7 @@ userGroupRouter.get('/removeByUser/:id', safe(async (req: Request, res: Response
     }
 }));
 
-userGroupRouter.get('/removeByGroup/:id', safe(async (req: Request, res: Response) => {
+userGroupRouter.get('/removeByGroup/:id', checkToken, safe(async (req: Request, res: Response) => {
     const deletedRows = await userGroupCtrl.removeGroup(req.params.id);
 
     if (!deletedRows) {
@@ -42,7 +41,7 @@ userGroupRouter.get('/removeByGroup/:id', safe(async (req: Request, res: Respons
     }
 }));
 
-userGroupRouter.post('/',  safe(async (req: Request, res: Response) => {
+userGroupRouter.post('/', checkToken, safe(async (req: Request, res: Response) => {
     if (!req.body) {
         res.status(404).json({message: `Group's data not found`});
         return null;

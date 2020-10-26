@@ -1,16 +1,15 @@
 import express, {NextFunction, Request, Response} from 'express';
-import {userSchema, commonValidateSchema} from "../models/user.validation";
-import {CustomRequest} from "../types/custom";
-import {errorLogging} from "../configs/winston.config";
+import {commonValidateSchema, userSchema} from "../models/user.validation";
+import {CustomRequest} from "../types/custom.type";
 import {UserController} from "../controllers/user.ctrl";
 import {safe} from 'express-safe-async';
+import {checkToken} from "../auth/auth";
 
 export const userRouter = express.Router();
-const userCtrl = new UserController();
 
-userRouter.get('/user/:id', errorLogging,
-    async (req: Request, res: Response, next: NextFunction) => {
-        const user = await userCtrl.getUserById(req.params.id);
+userRouter.get('/user/:id', checkToken,
+    safe(async (req: Request, res: Response, next: NextFunction) => {
+        const user = await UserController.getUserById(req.params.id);
 
         if (!user) {
             res.status(404).json({message: `User with id ${req.params.id} not found`});
@@ -18,18 +17,14 @@ userRouter.get('/user/:id', errorLogging,
             res.status(200).json(user);
         }
     }
-);
+    ));
 
-userRouter.get('/', safe(async (req: Request, res: Response) => {
-    await userCtrl.getAllUsers().then(users => {
-        res.json(users);
-    })
+userRouter.get('/', checkToken, safe(async (req: Request, res: Response) => {
+    res.json(await UserController.getAllUsers());
 }));
 
-userRouter.get('/deletedUsers', safe(async (req: Request, res: Response) => {
-    await userCtrl.getDeletedUsers().then(users => {
-        res.json(users);
-    })
+userRouter.get('/deletedUsers', checkToken, safe(async (req: Request, res: Response) => {
+    res.json(UserController.getDeletedUsers());
 }));
 
 userRouter.post('/', commonValidateSchema(userSchema), safe(async (req: Request, res: Response) => {
@@ -38,7 +33,7 @@ userRouter.post('/', commonValidateSchema(userSchema), safe(async (req: Request,
         return null;
     }
 
-    const user = await userCtrl.createNewUser(req.body);
+    const user = await UserController.createNewUser(req.body);
 
     if (!user) {
         res.status(403).json({message: `User with same login is exist`});
@@ -50,13 +45,13 @@ userRouter.post('/', commonValidateSchema(userSchema), safe(async (req: Request,
     }
 }));
 
-userRouter.put('/', commonValidateSchema(userSchema), safe(async (req: Request, res: Response) => {
+userRouter.put('/', [checkToken, commonValidateSchema(userSchema)], safe(async (req: Request, res: Response) => {
     if (!req.body) {
         res.status(404).json({message: `User's data not found`});
         return null;
     }
 
-    const usersUpdateCount = await userCtrl.updateUser(req.body);
+    const usersUpdateCount = await UserController.updateUser(req.body);
 
     if (!usersUpdateCount) {
         res.status(404).json({message: `User with id ${req.params.id} not found`});
@@ -65,8 +60,8 @@ userRouter.put('/', commonValidateSchema(userSchema), safe(async (req: Request, 
     }
 }));
 
-userRouter.get('/delete/:id', safe(async (req: Request, res: Response) => {
-    const deletedUser = await userCtrl.deleteUser(req.params.id);
+userRouter.get('/delete/:id', checkToken, safe(async (req: Request, res: Response) => {
+    const deletedUser = await UserController.deleteUser(req.params.id);
 
     if (!deletedUser) {
         res.status(404).json({message: `User with id ${req.params.id} not found`});
@@ -75,9 +70,9 @@ userRouter.get('/delete/:id', safe(async (req: Request, res: Response) => {
     }
 }));
 
-userRouter.get('/limitUsers', safe(async (req: CustomRequest, res: Response) => {
+userRouter.get('/limitUsers', checkToken, safe(async (req: CustomRequest, res: Response) => {
     const {loginSubstring, limit} = req.query;
-    const limitUsersArray = userCtrl.getLimitUsers(limit ? +limit : 1, loginSubstring?.toString() || '');
+    const limitUsersArray = UserController.getLimitUsers(limit ? +limit : 1, loginSubstring?.toString() || '');
 
     limitUsersArray
         .catch((err) => {

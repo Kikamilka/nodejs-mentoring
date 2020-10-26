@@ -1,6 +1,6 @@
 import {generateId} from "../utils";
 import {Group} from "../models/group.model";
-import {GroupAttributes} from "../types/group-attributes";
+import {GroupAttributes} from "../types/group-attributes.type";
 
 export class GroupDataAccessLayer {
     public getGroupById = (groupId: string): Promise<Group | null> => {

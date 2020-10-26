@@ -1,5 +1,5 @@
 import {GroupDataAccessLayer} from "../data-access/group.dal";
-import {GroupAttributes} from "../types/group-attributes";
+import {GroupAttributes} from "../types/group-attributes.type";
 
 const dataAccessLayer = new GroupDataAccessLayer();
 
