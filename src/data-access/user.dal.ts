@@ -4,7 +4,7 @@ import {User} from "../models/user.model";
 import {UserAttributes} from "../types/user-attributes";
 import {generateId} from "../utils";
 
-export class DataAccessLayer {
+export class UserDataAccessLayer {
     public getUserById = (userId: string): Promise<User | null> => {
         return User.findOne({where: {id: userId}});
     };
@@ -39,7 +39,6 @@ export class DataAccessLayer {
     };
 
     public updateUser = (newUser: UserAttributes) => {
-        console.log(newUser);
         return User.update(newUser, {
             where: {
                 id: newUser.id,

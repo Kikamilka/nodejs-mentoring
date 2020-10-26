@@ -21,7 +21,7 @@ function errorResponse(schemaErrors: ValidationErrorItem[]) {
     };
 }
 
-export function userValidateSchema(schema: AnySchema) {
+export function commonValidateSchema(schema: AnySchema) {
     return (req: Request, res: Response, next: NextFunction) => {
         const {error} = schema.validate(req.body, {
             abortEarly: false,

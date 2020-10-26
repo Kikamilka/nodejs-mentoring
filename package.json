@@ -15,8 +15,8 @@
     "lint-fix": "npm run lint -- --fix",
     "task1": "nodemon src/task1/first-task.ts",
     "task2": "nodemon src/task1/second-task.ts",
-    "module2": "nodemon src/api/user.api.ts",
-    "connect": "nodemon src/data-access/db-connect.ts"
+    "app_start": "nodemon src/app.ts",
+    "connect": "nodemon src/data-access/pg-db-connect.ts"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
   "homepage": "https://github.com/Kikamilka/nodejs-mentoring#readme",
   "dependencies": {
     "csvtojson": "^2.0.10",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "joi": "^17.2.0",
     "pg": "^8.3.3",

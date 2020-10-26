@@ -1,10 +1,9 @@
 import {Client} from 'pg';
-import {DATABASE_URL} from "../configs/sequelize.config";
 
 /* Тестовое подключение в БД, до использования sequelize */
 
 const client = new Client({
-    connectionString: DATABASE_URL,
+    connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
@@ -12,7 +11,7 @@ const client = new Client({
 
 client.connect();
 
-client.query('SELECT * FROM USERS;', (err, res) => {
+client.query('SELECT * FROM USERGROUP;', (err, res) => {
     if (err) throw err;
     for (let row of res.rows) {
         console.log(JSON.stringify(row));
@@ -20,13 +19,13 @@ client.query('SELECT * FROM USERS;', (err, res) => {
     client.end();
 });
 
-client.query('CREATE TABLE USERS(' +
-    'id        text,' +
-    'login     text,' +
-    'password  text,' +
-    'age       int,' +
-    'isDeleted boolean,' +
-    'primary key (id))', (err, res) => {
-    if (err) throw err;
-    client.end();
-});
+// client.query('CREATE TABLE USERS(' +
+//     'id        text,' +
+//     'login     text,' +
+//     'password  text,' +
+//     'age       int,' +
+//     'isDeleted boolean,' +
+//     'primary key (id))', (err, res) => {
+//     if (err) throw err;
+//     client.end();
+// });
