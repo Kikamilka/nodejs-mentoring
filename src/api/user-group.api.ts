@@ -17,9 +17,7 @@ userGroupRouter.get('/getUsersInGroup/:id',
 ));
 
 userGroupRouter.get('/', safe(async (req: Request, res: Response) => {
-    await userGroupCtrl.getAllUserGroup().then(userGroups => {
-        res.json(userGroups);
-    });
+    res.json(await userGroupCtrl.getAllUserGroup());
 }));
 
 userGroupRouter.get('/removeByUser/:id', safe(async (req: Request, res: Response) => {
@@ -42,7 +40,7 @@ userGroupRouter.get('/removeByGroup/:id', safe(async (req: Request, res: Respons
     }
 }));
 
-userGroupRouter.post('/',  safe(async (req: Request, res: Response) => {
+userGroupRouter.post('/', safe(async (req: Request, res: Response) => {
     if (!req.body) {
         res.status(404).json({message: `Group's data not found`});
         return null;

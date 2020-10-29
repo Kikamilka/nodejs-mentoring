@@ -1,7 +1,7 @@
 import {Op} from "sequelize";
 
 import {User} from "../models/user.model";
-import {UserAttributes} from "../types/user-attributes";
+import {UserAttributes} from "../types/user-attributes.type";
 import {generateId} from "../utils";
 
 export class UserDataAccessLayer {

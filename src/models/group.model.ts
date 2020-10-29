@@ -1,7 +1,7 @@
 import {DataTypes, Model} from "sequelize";
 import {sequelize} from "../configs/sequelize.config";
-import {GroupAttributes} from "../types/group-attributes";
-import {Permission} from "../types/permission";
+import {GroupAttributes} from "../types/group-attributes.type";
+import {Permission} from "../types/permission.type";
 
 export class Group extends Model<GroupAttributes> implements GroupAttributes {
     public id!: string;

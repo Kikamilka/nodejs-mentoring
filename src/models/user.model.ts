@@ -1,6 +1,6 @@
 import {DataTypes, Model} from "sequelize";
 import {sequelize} from "../configs/sequelize.config";
-import {UserAttributes} from "../types/user-attributes";
+import {UserAttributes} from "../types/user-attributes.type";
 
 export class User extends Model<UserAttributes> implements UserAttributes {
     public id!: string;

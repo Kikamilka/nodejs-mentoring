@@ -20,9 +20,7 @@ groupRouter.get('/group/:id',
     ));
 
 groupRouter.get('/', safe(async (req: Request, res: Response) => {
-    await groupCtrl.getAllGroups().then(groups => {
-        res.json(groups);
-    });
+    res.json(await groupCtrl.getAllGroups());
 }));
 
 groupRouter.post('/', commonValidateSchema(groupSchema), safe(async (req: Request, res: Response) => {
