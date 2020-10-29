@@ -1,4 +1,4 @@
-import {UserAttributes} from "../types/user-attributes";
+import {UserAttributes} from "../types/user-attributes.type";
 
 export const mapUsers: Map<string, UserAttributes> = new Map([
     ['1', {
