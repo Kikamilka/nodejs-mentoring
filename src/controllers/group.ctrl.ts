@@ -3,28 +3,29 @@ import {GroupAttributes} from "../types/group-attributes";
 
 const dataAccessLayer = new GroupDataAccessLayer();
 
-export const getGroupById = (groupId: string) => {
-    return dataAccessLayer.getGroupById(groupId);
-};
+export class GroupController {
+    public async getGroupById(groupId: string) {
+        return dataAccessLayer.getGroupById(groupId);
+    }
 
-export const getAllGroups = () => {
-    return dataAccessLayer.getAllGroups();
-};
+    public async getAllGroups() {
+        return dataAccessLayer.getAllGroups();
+    }
 
-export const removeGroup = (groupId: string): Promise<boolean> => {
-    return dataAccessLayer.removeGroup(groupId)
-        .catch(() => {
-            return Promise.resolve(false);
-        }).then(() => {
-            // возможно тут нужно проверить groups[0].length
-            return Promise.resolve(true);
+    public async removeGroup(groupId: string) {
+        return await dataAccessLayer.removeGroup(groupId).then((deletedNumber) => {
+            return deletedNumber > 0;
+        }).catch(() => {
+            return false;
         })
-};
+    }
 
-export const updateGroup = (newGroup: GroupAttributes) => {
-    return dataAccessLayer.updateGroup(newGroup);
-};
 
-export const createNewGroup = (group: GroupAttributes) => {
-    return dataAccessLayer.createNewGroup(group);
-};
+    public async updateGroup(newGroup: GroupAttributes) {
+        return dataAccessLayer.updateGroup(newGroup);
+    }
+
+    public async createNewGroup(group: GroupAttributes) {
+        return dataAccessLayer.createNewGroup(group);
+    }
+}

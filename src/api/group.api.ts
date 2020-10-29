@@ -1,12 +1,14 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 import {commonValidateSchema} from "../models/user.validation";
-import * as groupCtrl from "../controllers/group.ctrl";
 import {groupSchema} from "../models/group.validation";
+import {GroupController} from "../controllers/group.ctrl";
+import {safe} from 'express-safe-async';
 
 export const groupRouter = express.Router();
+const groupCtrl = new GroupController();
 
 groupRouter.get('/group/:id',
-    async (req, res) => {
+    safe(async (req: Request, res: Response) => {
         const user = await groupCtrl.getGroupById(req.params.id);
 
         if (!user) {
@@ -15,15 +17,15 @@ groupRouter.get('/group/:id',
             res.status(200).json(user);
         }
     }
-);
+    ));
 
-groupRouter.get('/', async (req, res) => {
+groupRouter.get('/', safe(async (req: Request, res: Response) => {
     await groupCtrl.getAllGroups().then(groups => {
         res.json(groups);
     });
-});
+}));
 
-groupRouter.post('/', commonValidateSchema(groupSchema), async (req, res) => {
+groupRouter.post('/', commonValidateSchema(groupSchema), safe(async (req: Request, res: Response) => {
     if (!req.body) {
         res.status(404).json({message: `Group's data not found`});
         return null;
@@ -39,9 +41,9 @@ groupRouter.post('/', commonValidateSchema(groupSchema), async (req, res) => {
             group: group
         });
     }
-});
+}));
 
-groupRouter.put('/', commonValidateSchema(groupSchema), async (req, res) => {
+groupRouter.put('/', commonValidateSchema(groupSchema), safe(async (req: Request, res: Response) => {
     if (!req.body) {
         res.status(404).json({message: `User's data not found`});
         return null;
@@ -54,9 +56,9 @@ groupRouter.put('/', commonValidateSchema(groupSchema), async (req, res) => {
     } else {
         res.status(200).json({message: `Group with id ${req.params.id} was updated`});
     }
-});
+}));
 
-groupRouter.get('/remove/:id', async (req, res) => {
+groupRouter.get('/remove/:id', safe(async (req: Request, res: Response) => {
     const deletedGroup = await groupCtrl.removeGroup(req.params.id);
 
     if (!deletedGroup) {
@@ -64,4 +66,4 @@ groupRouter.get('/remove/:id', async (req, res) => {
     } else {
         res.status(200).json({message: `Group with id ${req.params.id} was deleted`});
     }
-});
+}));
