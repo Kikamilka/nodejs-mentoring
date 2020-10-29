@@ -3,12 +3,11 @@ import {commonValidateSchema} from "../models/user.validation";
 import {groupSchema} from "../models/group.validation";
 import {GroupController} from "../controllers/group.ctrl";
 import {safe} from 'express-safe-async';
-import {checkToken} from "../auth/auth";
 
 export const groupRouter = express.Router();
 const groupCtrl = new GroupController();
 
-groupRouter.get('/group/:id', checkToken,
+groupRouter.get('/group/:id',
     safe(async (req: Request, res: Response) => {
         const user = await groupCtrl.getGroupById(req.params.id);
 
@@ -20,11 +19,11 @@ groupRouter.get('/group/:id', checkToken,
     }
     ));
 
-groupRouter.get('/', checkToken, safe(async (req: Request, res: Response) => {
+groupRouter.get('/', safe(async (req: Request, res: Response) => {
     res.json(await groupCtrl.getAllGroups());
 }));
 
-groupRouter.post('/', [checkToken, commonValidateSchema(groupSchema)], safe(async (req: Request, res: Response) => {
+groupRouter.post('/', commonValidateSchema(groupSchema), safe(async (req: Request, res: Response) => {
     if (!req.body) {
         res.status(404).json({message: `Group's data not found`});
         return null;
@@ -42,7 +41,7 @@ groupRouter.post('/', [checkToken, commonValidateSchema(groupSchema)], safe(asyn
     }
 }));
 
-groupRouter.put('/', [checkToken, commonValidateSchema(groupSchema)], safe(async (req: Request, res: Response) => {
+groupRouter.put('/', commonValidateSchema(groupSchema), safe(async (req: Request, res: Response) => {
     if (!req.body) {
         res.status(404).json({message: `User's data not found`});
         return null;
@@ -57,7 +56,7 @@ groupRouter.put('/', [checkToken, commonValidateSchema(groupSchema)], safe(async
     }
 }));
 
-groupRouter.get('/remove/:id', checkToken, safe(async (req: Request, res: Response) => {
+groupRouter.get('/remove/:id', safe(async (req: Request, res: Response) => {
     const deletedGroup = await groupCtrl.removeGroup(req.params.id);
 
     if (!deletedGroup) {

@@ -3,11 +3,10 @@ import {commonValidateSchema, userSchema} from "../models/user.validation";
 import {CustomRequest} from "../types/custom.type";
 import {UserController} from "../controllers/user.ctrl";
 import {safe} from 'express-safe-async';
-import {checkToken} from "../auth/auth";
 
 export const userRouter = express.Router();
 
-userRouter.get('/user/:id', checkToken,
+userRouter.get('/user/:id',
     safe(async (req: Request, res: Response, next: NextFunction) => {
         const user = await UserController.getUserById(req.params.id);
 
@@ -19,11 +18,11 @@ userRouter.get('/user/:id', checkToken,
     }
     ));
 
-userRouter.get('/', checkToken, safe(async (req: Request, res: Response) => {
+userRouter.get('/', safe(async (req: Request, res: Response) => {
     res.json(await UserController.getAllUsers());
 }));
 
-userRouter.get('/deletedUsers', checkToken, safe(async (req: Request, res: Response) => {
+userRouter.get('/deletedUsers', safe(async (req: Request, res: Response) => {
     res.json(UserController.getDeletedUsers());
 }));
 
@@ -45,7 +44,7 @@ userRouter.post('/', commonValidateSchema(userSchema), safe(async (req: Request,
     }
 }));
 
-userRouter.put('/', [checkToken, commonValidateSchema(userSchema)], safe(async (req: Request, res: Response) => {
+userRouter.put('/', commonValidateSchema(userSchema), safe(async (req: Request, res: Response) => {
     if (!req.body) {
         res.status(404).json({message: `User's data not found`});
         return null;
@@ -60,7 +59,7 @@ userRouter.put('/', [checkToken, commonValidateSchema(userSchema)], safe(async (
     }
 }));
 
-userRouter.get('/delete/:id', checkToken, safe(async (req: Request, res: Response) => {
+userRouter.get('/delete/:id', safe(async (req: Request, res: Response) => {
     const deletedUser = await UserController.deleteUser(req.params.id);
 
     if (!deletedUser) {
@@ -70,7 +69,7 @@ userRouter.get('/delete/:id', checkToken, safe(async (req: Request, res: Respons
     }
 }));
 
-userRouter.get('/limitUsers', checkToken, safe(async (req: CustomRequest, res: Response) => {
+userRouter.get('/limitUsers', safe(async (req: CustomRequest, res: Response) => {
     const {loginSubstring, limit} = req.query;
     const limitUsersArray = UserController.getLimitUsers(limit ? +limit : 1, loginSubstring?.toString() || '');
 
