@@ -1,12 +1,15 @@
-import express, {Response} from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import {userSchema, commonValidateSchema} from "../models/user.validation";
 import {CustomRequest} from "../types/custom";
-import * as userCtrl from "../controllers/user.ctrl";
+import {errorLogging} from "../configs/winston.config";
+import {UserController} from "../controllers/user.ctrl";
+import {safe} from 'express-safe-async';
 
 export const userRouter = express.Router();
+const userCtrl = new UserController();
 
-userRouter.get('/user/:id',
-    async (req, res) => {
+userRouter.get('/user/:id', errorLogging,
+    async (req: Request, res: Response, next: NextFunction) => {
         const user = await userCtrl.getUserById(req.params.id);
 
         if (!user) {
@@ -17,19 +20,19 @@ userRouter.get('/user/:id',
     }
 );
 
-userRouter.get('/', async (req, res) => {
+userRouter.get('/', safe(async (req: Request, res: Response) => {
     await userCtrl.getAllUsers().then(users => {
         res.json(users);
-    }).catch(err => console.log(err));
-});
+    })
+}));
 
-userRouter.get('/deletedUsers', async (req, res) => {
+userRouter.get('/deletedUsers', safe(async (req: Request, res: Response) => {
     await userCtrl.getDeletedUsers().then(users => {
         res.json(users);
-    }).catch(err => console.log(err));
-});
+    })
+}));
 
-userRouter.post('/', commonValidateSchema(userSchema), async (req, res) => {
+userRouter.post('/', commonValidateSchema(userSchema), safe(async (req: Request, res: Response) => {
     if (!req.body) {
         res.status(404).json({message: `User's data not found`});
         return null;
@@ -45,9 +48,9 @@ userRouter.post('/', commonValidateSchema(userSchema), async (req, res) => {
             user: user
         });
     }
-});
+}));
 
-userRouter.put('/', commonValidateSchema(userSchema), async (req, res) => {
+userRouter.put('/', commonValidateSchema(userSchema), safe(async (req: Request, res: Response) => {
     if (!req.body) {
         res.status(404).json({message: `User's data not found`});
         return null;
@@ -60,9 +63,9 @@ userRouter.put('/', commonValidateSchema(userSchema), async (req, res) => {
     } else {
         res.status(200).json({message: `User with id ${req.params.id} was updated`});
     }
-});
+}));
 
-userRouter.get('/delete/:id', async (req, res) => {
+userRouter.get('/delete/:id', safe(async (req: Request, res: Response) => {
     const deletedUser = await userCtrl.deleteUser(req.params.id);
 
     if (!deletedUser) {
@@ -70,9 +73,9 @@ userRouter.get('/delete/:id', async (req, res) => {
     } else {
         res.status(200).json({message: `User with id ${req.params.id} was soft deleted`});
     }
-});
+}));
 
-userRouter.get('/limitUsers', async (req: CustomRequest, res: Response) => {
+userRouter.get('/limitUsers', safe(async (req: CustomRequest, res: Response) => {
     const {loginSubstring, limit} = req.query;
     const limitUsersArray = userCtrl.getLimitUsers(limit ? +limit : 1, loginSubstring?.toString() || '');
 
@@ -83,5 +86,4 @@ userRouter.get('/limitUsers', async (req: CustomRequest, res: Response) => {
             res.json(users);
         }
     )
-
-});
+}));
