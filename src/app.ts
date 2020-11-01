@@ -20,7 +20,7 @@ app.use(requestLogging);
 app.use(cors());
 
 app.use("/", authRouter);
-// app.use(checkAuthToken);
+app.use(checkAuthToken);
 app.use("/users", userRouter);
 app.use("/groups", groupRouter);
 app.use("/usergroup", userGroupRouter);

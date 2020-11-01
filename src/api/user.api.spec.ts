@@ -1,6 +1,8 @@
 const request = require('supertest');
 const app = require('../app');
 
+// интеграционные тесты: тут надо дорабатывать
+
 // describe('Post Endpoints', () => {
 //     it('should create a new user', async () => {
 //         const res = await request(app)
