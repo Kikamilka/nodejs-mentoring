@@ -1,0 +1,27 @@
+{
+  "presets": [
+    "@babel/preset-typescript",
+    "@babel/preset-env"
+  ],
+  "plugins": [
+    "@babel/plugin-transform-arrow-functions",
+    "@babel/plugin-transform-block-scoping",
+    [
+      "@babel/plugin-proposal-function-bind",
+      {
+        "loose": true
+      }
+    ],
+    "@babel/plugin-syntax-class-properties",
+    "@babel/plugin-syntax-dynamic-import",
+    "@babel/plugin-transform-regenerator",
+    "@babel/plugin-proposal-class-properties",
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
+    ]
+  ]
+}
+

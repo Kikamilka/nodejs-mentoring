@@ -5,11 +5,10 @@ import {GroupController} from "../controllers/group.ctrl";
 import {safe} from 'express-safe-async';
 
 export const groupRouter = express.Router();
-const groupCtrl = new GroupController();
 
 groupRouter.get('/group/:id',
     safe(async (req: Request, res: Response) => {
-        const user = await groupCtrl.getGroupById(req.params.id);
+        const user = await GroupController.getGroupById(req.params.id);
 
         if (!user) {
             res.status(404).json({message: `User with id ${req.params.id} not found`});
@@ -20,7 +19,7 @@ groupRouter.get('/group/:id',
     ));
 
 groupRouter.get('/', safe(async (req: Request, res: Response) => {
-    res.json(await groupCtrl.getAllGroups());
+    res.json(await GroupController.getAllGroups());
 }));
 
 groupRouter.post('/', commonValidateSchema(groupSchema), safe(async (req: Request, res: Response) => {
@@ -29,7 +28,7 @@ groupRouter.post('/', commonValidateSchema(groupSchema), safe(async (req: Reques
         return null;
     }
 
-    const group = await groupCtrl.createNewGroup(req.body);
+    const group = await GroupController.createNewGroup(req.body);
 
     if (!group) {
         res.status(403).json({message: `Group with same name is exist`});
@@ -47,7 +46,7 @@ groupRouter.put('/', commonValidateSchema(groupSchema), safe(async (req: Request
         return null;
     }
 
-    const groupsUpdateCount = await groupCtrl.updateGroup(req.body);
+    const groupsUpdateCount = await GroupController.updateGroup(req.body);
 
     if (!groupsUpdateCount) {
         res.status(404).json({message: `Group with id ${req.params.id} not found`});
@@ -57,7 +56,7 @@ groupRouter.put('/', commonValidateSchema(groupSchema), safe(async (req: Request
 }));
 
 groupRouter.get('/remove/:id', safe(async (req: Request, res: Response) => {
-    const deletedGroup = await groupCtrl.removeGroup(req.params.id);
+    const deletedGroup = await GroupController.removeGroup(req.params.id);
 
     if (!deletedGroup) {
         res.status(404).json({message: `Group with id ${req.params.id} not found`});

@@ -4,15 +4,15 @@ import {GroupAttributes} from "../types/group-attributes.type";
 const dataAccessLayer = new GroupDataAccessLayer();
 
 export class GroupController {
-    public async getGroupById(groupId: string) {
+    public static async getGroupById(groupId: string) {
         return dataAccessLayer.getGroupById(groupId);
     }
 
-    public async getAllGroups() {
+    public static async getAllGroups() {
         return dataAccessLayer.getAllGroups();
     }
 
-    public async removeGroup(groupId: string) {
+    public static async removeGroup(groupId: string) {
         return await dataAccessLayer.removeGroup(groupId).then((deletedNumber) => {
             return deletedNumber > 0;
         }).catch(() => {
@@ -20,12 +20,11 @@ export class GroupController {
         })
     }
 
-
-    public async updateGroup(newGroup: GroupAttributes) {
+    public static async updateGroup(newGroup: GroupAttributes) {
         return dataAccessLayer.updateGroup(newGroup);
     }
 
-    public async createNewGroup(group: GroupAttributes) {
+    public static async createNewGroup(group: GroupAttributes) {
         return dataAccessLayer.createNewGroup(group);
     }
 }
