@@ -10,7 +10,7 @@ describe('Group controller', () => {
     it('getAllGroups method', async () => {
         expect.assertions(1);
         const data = await GroupController.getAllGroups();
-        expect(data.length).toEqual(2);
+        expect(data.length).toEqual(3);
     });
 
     it('removeGroup method with wrong id', async () => {

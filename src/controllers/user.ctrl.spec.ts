@@ -14,7 +14,7 @@ describe('User controller', () => {
     it('getAllUsers method', async () => {
         expect.assertions(1);
         const data = await UserController.getAllUsers();
-        expect(data.length).toEqual(9);
+        expect(data.length).toEqual(13);
     });
 
     it('deleteUser method', async () => {

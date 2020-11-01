@@ -1,19 +1,27 @@
-const request = require('supertest');
-const app = require('../app');
+import supertest from "supertest";
+import {app} from "../app";
 
-// интеграционные тесты: тут надо дорабатывать
+describe('routes', () => {
+    it("should fail when accessing an authed route with an invalid JWT\", ", async () => {
+        const userLogin = `kamila`
+        const password = `123`
 
-// describe('Post Endpoints', () => {
-//     it('should create a new user', async () => {
-//         const res = await request(app)
-//             .post('/users')
-//             .send({
-//                 "login": "testUser",
-//                 "password": "test",
-//                 "age": 30,
-//                 "isDeleted": false,
-//             });
-//         expect(res.statusCode).toEqual(200);
-//         expect(res.body).toHaveProperty('post')
-//     })
-// });
+        let authToken: string = '';
+
+        // TODO: как-то вытащить токен ?
+        // let authResponse = app.response;
+        // const loginRes = await login(
+        //     login: userLogin,
+        //     password: password,
+        //     authResponse
+        // )
+        // authToken = loginRes;
+
+        const response = await supertest(app)
+            .get("/users")
+            .expect(401)
+            .set("authorization", `bearer ${authToken}`)
+
+        expect(response.body.message).toEqual('No token provided');
+    })
+});
